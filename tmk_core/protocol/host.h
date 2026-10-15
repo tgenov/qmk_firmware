@@ -43,6 +43,11 @@ void    host_nkro_send(report_nkro_t *report);
 void    host_mouse_send(report_mouse_t *report);
 void    host_system_send(uint16_t usage);
 void    host_consumer_send(uint16_t usage);
+#ifdef APPLE_KEYS_ENABLE
+void     host_apple_top_case_send(uint16_t bits);
+void     host_apple_keyboard_send(uint16_t usage);
+uint16_t host_last_apple_top_case(void);
+#endif
 void    host_programmable_button_send(uint32_t data);
 void    host_plover_hid_send(report_plover_hid_t *report);
 void    host_raw_hid_send(uint8_t *data, uint8_t length);

@@ -70,6 +70,10 @@ extern keymap_config_t keymap_config;
 static host_driver_t *driver;
 static uint16_t       last_system_usage   = 0;
 static uint16_t       last_consumer_usage = 0;
+#ifdef APPLE_KEYS_ENABLE
+static uint16_t last_apple_top_case  = 0;
+static uint16_t last_apple_keyboard  = 0;
+#endif
 
 void host_set_driver(host_driver_t *d) {
     driver = d;
@@ -250,6 +254,42 @@ void host_consumer_send(uint16_t usage) {
     };
     (*driver->send_extra)(&report);
 }
+
+#ifdef APPLE_KEYS_ENABLE
+/* Apple Vendor Top Case page (0x00FF) as a bitmap: bit n = usage n (bit 3 = Keyboard Fn / Globe). */
+void host_apple_top_case_send(uint16_t bits) {
+    if (bits == last_apple_top_case) return;
+    last_apple_top_case = bits;
+
+    host_driver_t *driver = host_get_active_driver();
+    if (!driver || !driver->send_extra) return;
+
+    report_extra_t report = {
+        .report_id = REPORT_ID_APPLE_TOP_CASE,
+        .usage     = bits,
+    };
+    (*driver->send_extra)(&report);
+}
+
+/* Apple Vendor Keyboard page (0xFF01), one usage at a time like the consumer report. */
+void host_apple_keyboard_send(uint16_t usage) {
+    if (usage == last_apple_keyboard) return;
+    last_apple_keyboard = usage;
+
+    host_driver_t *driver = host_get_active_driver();
+    if (!driver || !driver->send_extra) return;
+
+    report_extra_t report = {
+        .report_id = REPORT_ID_APPLE_KEYBOARD,
+        .usage     = usage,
+    };
+    (*driver->send_extra)(&report);
+}
+
+uint16_t host_last_apple_top_case(void) {
+    return last_apple_top_case;
+}
+#endif
 
 #ifdef JOYSTICK_ENABLE
 void host_joystick_send(joystick_t *joystick) {

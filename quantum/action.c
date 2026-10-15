@@ -1132,6 +1132,10 @@ void clear_keyboard_but_mods_and_keys(void) {
     host_system_send(0);
     host_consumer_send(0);
 #endif
+#ifdef APPLE_KEYS_ENABLE
+    host_apple_top_case_send(0);
+    host_apple_keyboard_send(0);
+#endif
     clear_weak_mods();
     send_keyboard_report();
 #ifdef MOUSEKEY_ENABLE

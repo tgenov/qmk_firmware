@@ -861,6 +861,20 @@ ifeq ($(strip $(PS2_ENABLE)), yes)
     SRC += ps2_$(strip $(PS2_DRIVER)).c
 endif
 
+APPLE_KEYS_ENABLE ?= no
+ifeq ($(strip $(APPLE_KEYS_ENABLE)), yes)
+    ifneq ($(strip $(KEYBOARD_SHARED_EP)), yes)
+        $(error APPLE_KEYS_ENABLE requires KEYBOARD_SHARED_EP = yes)
+    endif
+    ifneq ($(strip $(EXTRAKEY_ENABLE)), yes)
+        $(error APPLE_KEYS_ENABLE requires EXTRAKEY_ENABLE = yes)
+    endif
+    ifeq ($(strip $(PROTOCOL)), VUSB)
+        $(error APPLE_KEYS_ENABLE is not supported on V-USB)
+    endif
+    OPT_DEFS += -DAPPLE_KEYS_ENABLE
+endif
+
 JOYSTICK_ENABLE ?= no
 VALID_JOYSTICK_TYPES := analog digital
 JOYSTICK_DRIVER ?= analog

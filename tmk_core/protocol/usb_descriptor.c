@@ -392,6 +392,39 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM SharedReport[] = {
         HID_RI_REPORT_SIZE(8, 16),
         HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_ARRAY | HID_IOF_ABSOLUTE),
     HID_RI_END_COLLECTION(0),
+
+#    ifdef APPLE_KEYS_ENABLE
+    // Apple vendor pages. macOS only acts on these when the device is matched by an Apple
+    // keyboard driver (Apple VID/PID), and only if they share an interface with the keyboard
+    // collection, hence KEYBOARD_SHARED_EP. Layout mirrors Karabiner's virtual keyboard.
+    HID_RI_USAGE_PAGE(16, 0xFF00),        // Apple Vendor
+    HID_RI_USAGE(8, 0x01),                // Top Case
+    HID_RI_COLLECTION(8, 0x01),           // Application
+        HID_RI_REPORT_ID(8, REPORT_ID_APPLE_TOP_CASE),
+        HID_RI_USAGE_PAGE(8, 0xFF),       // Apple Vendor Top Case
+        HID_RI_USAGE_MINIMUM(8, 0x00),
+        HID_RI_USAGE_MAXIMUM(8, 0x0F),
+        HID_RI_LOGICAL_MINIMUM(8, 0x00),
+        HID_RI_LOGICAL_MAXIMUM(8, 0x01),
+        HID_RI_REPORT_COUNT(8, 16),
+        HID_RI_REPORT_SIZE(8, 1),
+        HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
+    HID_RI_END_COLLECTION(0),
+
+    HID_RI_USAGE_PAGE(16, 0xFF00),        // Apple Vendor
+    HID_RI_USAGE(8, 0x06),                // Keyboard
+    HID_RI_COLLECTION(8, 0x01),           // Application
+        HID_RI_REPORT_ID(8, REPORT_ID_APPLE_KEYBOARD),
+        HID_RI_USAGE_PAGE(16, 0xFF01),    // Apple Vendor Keyboard
+        HID_RI_USAGE_MINIMUM(8, 0x00),
+        HID_RI_USAGE_MAXIMUM(16, 0x00FF),
+        HID_RI_LOGICAL_MINIMUM(8, 0x00),
+        HID_RI_LOGICAL_MAXIMUM(16, 0x00FF),
+        HID_RI_REPORT_COUNT(8, 1),
+        HID_RI_REPORT_SIZE(8, 16),
+        HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_ARRAY | HID_IOF_ABSOLUTE),
+    HID_RI_END_COLLECTION(0),
+#    endif
 #endif
 
 #ifdef PROGRAMMABLE_BUTTON_ENABLE
